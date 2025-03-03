@@ -1,0 +1,38 @@
+<!-- src/app/create-invoice/create-invoice.component.html -->
+<div class="create-invoice">
+    <h2>Create Invoice</h2>
+    <mat-form-field appearance="fill">
+      <mat-label>Customer Reference</mat-label>
+      <input matInput [(ngModel)]="invoice.CustomerRef">
+    </mat-form-field>
+  
+    <mat-form-field appearance="fill">
+      <mat-label>Total Amount</mat-label>
+      <input matInput type="number" [(ngModel)]="invoice.TotalAmt">
+    </mat-form-field>
+  
+    <mat-form-field appearance="fill">
+      <mat-label>Invoice Date</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="invoice.InvoiceDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  
+    <div *ngFor="let item of invoice.LineItems; let i = index">
+      <h3>Line Item {{i + 1}}</h3>
+      <mat-form-field>
+        <mat-label>Amount</mat-label>
+        <input matInput [(ngModel)]="item.Amount">
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <input matInput [(ngModel)]="item.Description">
+      </mat-form-field>
+  
+      <button mat-button (click)="removeLineItem(i)">Remove Item</button>
+    </div>
+  
+    <button mat-button (click)="addLineItem()">Add Line Item</button>
+    <button mat-raised-button color="primary" (click)="createInvoice()">Create Invoice</button>
+  </div>

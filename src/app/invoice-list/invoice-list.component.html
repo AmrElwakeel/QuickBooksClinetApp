@@ -1,0 +1,124 @@
+<div class="invoice-list">
+  <h2>Invoices</h2>
+  <mat-table
+    [dataSource]="invoices"
+    matSort
+    class="mat-elevation-z8"
+    multiTemplateDataRows
+  >
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+      <mat-cell *matCellDef="let invoice"> {{ invoice.id }} </mat-cell>
+    </ng-container>
+
+    <!-- Customer Reference Column -->
+    <ng-container matColumnDef="customerRef">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Customer
+      </mat-header-cell>
+      <mat-cell *matCellDef="let invoice"> {{ invoice.customerRef }} </mat-cell>
+    </ng-container>
+
+    <!-- Total Amount Column -->
+    <ng-container matColumnDef="totalAmt">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Total Amount
+      </mat-header-cell>
+      <mat-cell *matCellDef="let invoice">
+        {{ invoice.totalAmt | currency }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Invoice Date Column -->
+    <ng-container matColumnDef="invoiceDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Invoice Date
+      </mat-header-cell>
+      <mat-cell *matCellDef="let invoice">
+        {{ invoice.invoiceDate | date: 'medium' }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Expandable Row Column -->
+    <ng-container matColumnDef="expand">
+      <mat-header-cell *matHeaderCellDef aria-label="Expand Row">
+      </mat-header-cell>
+      <mat-cell *matCellDef="let invoice">
+        <button
+          mat-icon-button
+          aria-label="Expand Row"
+          (click)="toggleRow(invoice)"
+        >
+          <mat-icon>
+            {{ expandedInvoice === invoice ? 'expand_less' : 'expand_more' }}
+          </mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Expanded Row Content -->
+    <ng-container matColumnDef="expandedDetail">
+      <mat-cell *matCellDef="let invoice" [attr.colspan]="displayedColumns.length">
+        <div class="expanded-row" *ngIf="expandedInvoice === invoice">
+          <h3>Line Items</h3>
+          <mat-table [dataSource]="invoice.lineItems" class="inner-table">
+            <!-- Amount Column -->
+            <ng-container matColumnDef="amount">
+              <mat-header-cell *matHeaderCellDef> Amount </mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                {{ item.amount | currency }}
+              </mat-cell>
+            </ng-container>
+
+            <!-- Description Column -->
+            <ng-container matColumnDef="description">
+              <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                {{ item.description }}
+              </mat-cell>
+            </ng-container>
+
+            <!-- Detail Type Column -->
+            <ng-container matColumnDef="detailType">
+              <mat-header-cell *matHeaderCellDef> Detail Type </mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                {{ item.detailType }}
+              </mat-cell>
+            </ng-container>
+
+            <!-- Item Reference Column -->
+            <ng-container matColumnDef="itemRef">
+              <mat-header-cell *matHeaderCellDef> Item Ref </mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                {{ item.itemRef }}
+              </mat-cell>
+            </ng-container>
+
+            <!-- Header and Row Definitions -->
+            <mat-header-row *matHeaderRowDef="lineItemColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: lineItemColumns"></mat-row>
+          </mat-table>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Header and Row Definitions -->
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      class="invoice-row"
+      [class.expanded-row]="expandedInvoice === row"
+    ></mat-row>
+    <mat-row
+      *matRowDef="let row; columns: ['expandedDetail']"
+      class="expanded-detail-row"
+    ></mat-row>
+  </mat-table>
+
+  <!-- Paginator -->
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+  ></mat-paginator>
+</div>
